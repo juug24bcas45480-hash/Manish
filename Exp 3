@@ -1,0 +1,73 @@
+Activity_Main.xml
+CODE
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitCenter"
+        android:contentDescription="Slideshow Image"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+MainActivity.java
+Code:
+package com.example.slideshow;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.widget.ImageView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    ImageView imageView;
+
+    int[] images = {
+            R.drawable.image1,
+            R.drawable.image2,
+            R.drawable.image3,
+            R.drawable.image4
+    };
+
+    int currentIndex = 0;
+    Handler handler = new Handler();
+
+    Runnable slideshowRunnable = new Runnable() {
+        @Override
+        public void run() {
+            imageView.setImageResource(images[currentIndex]);
+            currentIndex++;
+
+            if (currentIndex >= images.length) {
+                currentIndex = 0;
+            }
+
+            handler.postDelayed(this, 3000); // change image every 3 seconds
+        }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        imageView = findViewById(R.id.imageView);
+        handler.post(slideshowRunnable);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacks(slideshowRunnable);
+    }
+}
